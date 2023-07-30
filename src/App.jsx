@@ -12,6 +12,18 @@ function App() {
       age: 14
     }
   ]
+
+  const manager = {
+    name: "name",
+    greet: () => ("manager says hello")
+  }
+
+  manager.manageEmployee = (employeeName) => {
+    console.log(employeeName, "is being managed")
+  }
+
+  console.log(manager.greet())
+  console.log(manager.manageEmployee("person 1"))
   return (
     <>
       <h1>Hi there</h1>
