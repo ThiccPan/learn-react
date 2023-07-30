@@ -1,6 +1,5 @@
-const PersonCard = (props) => {
-    console.log(props)
-    const {name, age} = props;
+const PersonCard = ({name, age}) => {
+    console.log(name, age)
     const greetingMsg = () => `hello ${name}`
     return (
         <div>
