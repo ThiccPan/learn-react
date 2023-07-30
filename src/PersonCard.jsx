@@ -1,9 +1,12 @@
 const PersonCard = (props) => {
     console.log(props)
+    const {name, age} = props;
+    const greetingMsg = () => `hello ${name}`
     return (
         <div>
-            <p>Name: <span>{props.name}</span></p>
-            <p>Age: {props.age}</p>
+            <p>Name: <span>{name}</span></p>
+            <p>Age: {age}</p>
+            <p>{greetingMsg()}</p>
         </div>
     )
 }
