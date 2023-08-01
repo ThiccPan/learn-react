@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import AnecdotesComponent from './AnecdoteComponent'
 
 class feedbackModel {
 	goodCount = 0
@@ -57,6 +58,7 @@ function App() {
 	if (feedback.totalCount === 0) {
 		return (
 			<>
+				<AnecdotesComponent />
 				<h1>Give Feedback</h1>
 				<span>
 					<button onClick={() => clickGood(feedback, setFeedback)}>good</button>
@@ -71,6 +73,7 @@ function App() {
 
 	return (
 		<>
+			<AnecdotesComponent />
 			<h1>Give Feedback</h1>
 			<span>
 				<button onClick={() => clickGood(feedback, setFeedback)}>good</button>
