@@ -1,62 +1,110 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import './App.css'
-import PersonCard from "./PersonCard";
-import Counter from './Counter.jsx';
-import ArrayState from './ArrayState';
 
-class Employee {
-	constructor(name, age, departement) {
-		this.name = name;
-		this.age = age;
-		this.departement = departement;
-	}
-
-	describe() {
-		return this.name
-	}
+class feedbackModel {
+	goodCount = 0
+	neutralCount = 0
+	badCount = 0
+	totalCount = 0
+	average = 0
 }
 
-let personList = [
-	{
-		name: "person 1",
-		age: 12,
-		salary: 1000
-	},
-	{
-		name: "person 2",
-		age: 14,
-		salary: 1000
-	}
-]
-
-const manager = {
-	name: "name",
-	greet: () => ("manager says hello")
+function clickGood(feedback, setFeedback) {
+	setFeedback({
+		...feedback,
+		goodCount: feedback.goodCount + 1,
+		totalCount: feedback.totalCount + 1,
+		average: feedback.average + 1,
+	})
 }
 
-manager.manageEmployee = (employeeName) => {
-	console.log(employeeName, "is being managed")
+function clickNeutral(feedback, setFeedback) {
+	setFeedback({
+		...feedback,
+		neutralCount: feedback.neutralCount + 1,
+		totalCount: feedback.totalCount + 1
+	})
+}
+
+function clickBad(feedback, setFeedback) {
+	setFeedback({
+		...feedback,
+		badCount: feedback.badCount + 1,
+		totalCount: feedback.totalCount + 1,
+		average: feedback.average - 1,
+	})
+}
+
+function getAverage(ave, total) {
+	if (ave === 0 || total === 0) {
+		return 0
+	}
+
+	return parseFloat(ave / total).toFixed(1)
+}
+
+function getPosAve(good, total) {
+	console.log(good, total)
+	if (good === 0 || total === 0) {
+		return 0
+	}
+
+	return parseFloat(good / total).toFixed(1)
 }
 
 function App() {
-	const [displayPerson, setPerson] = useState(personList[0])
+	const [feedback, setFeedback] = useState(new feedbackModel());
+	if (feedback.totalCount === 0) {
+		return (
+			<>
+				<h1>Give Feedback</h1>
+				<span>
+					<button onClick={() => clickGood(feedback, setFeedback)}>good</button>
+					<button onClick={() => clickNeutral(feedback, setFeedback)}>neutral</button>
+					<button onClick={() => clickBad(feedback, setFeedback)}>bad</button>
+				</span>
 
-	console.log(manager.greet())
-	console.log(manager.manageEmployee("person 1"))
-	const employee1 = new Employee("employee 1", 12, "IT");
-	console.log("employee name: ", employee1.describe())
+				<h2>No feedback given</h2>
+			</>
+		)
+	}
 
 	return (
 		<>
-			<h1>Hi there</h1>
-			<PersonCard
-				person={displayPerson}
-				setPerson={setPerson}
-			/>
+			<h1>Give Feedback</h1>
+			<span>
+				<button onClick={() => clickGood(feedback, setFeedback)}>good</button>
+				<button onClick={() => clickNeutral(feedback, setFeedback)}>neutral</button>
+				<button onClick={() => clickBad(feedback, setFeedback)}>bad</button>
+			</span>
 
-			<Counter/>
-			<br />
-			<ArrayState/>
+			<h2>Stats</h2>
+			<table>
+				<tr>
+					<th>Good:</th>
+					<td>{feedback.goodCount}</td>
+				</tr>
+				<tr>
+					<th>Neutral:</th>
+					<td>{feedback.neutralCount}</td>
+				</tr>
+				<tr>
+					<th>Bad:</th>
+					<td>{feedback.badCount}</td>
+				</tr>
+				<tr>
+					<th>Total:</th>
+					<td>{feedback.totalCount}</td>
+				</tr>
+				<tr>
+					<th>Average:</th>
+					<td>{getAverage(feedback.average, feedback.totalCount)}</td>
+				</tr>
+				<tr>
+					<th>Positive:</th>
+					<td>{getPosAve(feedback.goodCount, feedback.totalCount)}%</td>
+				</tr>
+			</table>
 		</>
 	)
 }
