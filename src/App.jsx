@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css'
 import PersonCard from "./PersonCard";
 import Counter from './Counter.jsx';
+import ArrayState from './ArrayState';
 
 class Employee {
 	constructor(name, age, departement) {
@@ -54,6 +55,8 @@ function App() {
 			/>
 
 			<Counter/>
+			<br />
+			<ArrayState/>
 		</>
 	)
 }
