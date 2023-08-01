@@ -1,11 +1,18 @@
-const PersonCard = ({name, age}) => {
-    console.log(name, age)
-    const greetingMsg = () => `hello ${name}`
+const PersonCard = ({person, setPerson}) => {
+    console.log(person)
+    const greetingMsg = () => `hello ${person.name}`
+    const updateSalary = () => setPerson({
+        ...person,
+        salary: person.salary + 1000,
+    })
     return (
         <div>
-            <p>Name: <span>{name}</span></p>
-            <p>Age: {age}</p>
+            <p>Name: <span>{person.name}</span></p>
+            <p>Age: {person.age}</p>
+            <p>Salary: {person.salary}</p>
             <p>{greetingMsg()}</p>
+            
+            <button onClick={updateSalary}>+1k to salary</button>
         </div>
     )
 }

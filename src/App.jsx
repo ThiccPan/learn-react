@@ -18,11 +18,13 @@ class Employee {
 let personList = [
 	{
 		name: "person 1",
-		age: 12
+		age: 12,
+		salary: 1000
 	},
 	{
 		name: "person 2",
-		age: 14
+		age: 14,
+		salary: 1000
 	}
 ]
 
@@ -36,7 +38,7 @@ manager.manageEmployee = (employeeName) => {
 }
 
 function App() {
-	const [counter, setcounter] = useState(0)
+	const [displayPerson, setPerson] = useState(personList[0])
 
 	console.log(manager.greet())
 	console.log(manager.manageEmployee("person 1"))
@@ -46,9 +48,12 @@ function App() {
 	return (
 		<>
 			<h1>Hi there</h1>
-			<PersonCard name={personList[0].name} age={personList[0].age} />
-			{/* <PersonCard name={personList[1].name} age={personList[1].age} /> */}
-			<Counter count={counter} setCounter={setcounter}/>
+			<PersonCard
+				person={displayPerson}
+				setPerson={setPerson}
+			/>
+
+			<Counter/>
 		</>
 	)
 }
