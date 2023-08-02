@@ -1,94 +1,56 @@
 import { useState } from 'react';
 import './App.css'
-import PersonCard from "./PersonCard";
-import Counter from './Counter.jsx';
-import ArrayState from './ArrayState';
-
-class Employee {
-	constructor(name, age, departement) {
-		this.name = name;
-		this.age = age;
-		this.departement = departement;
-	}
-
-	describe() {
-		return this.name
-	}
-}
-
-let personList = [
-	{
-		id: 1,
-		name: "person 1",
-		age: 12,
-		salary: 1000
-	},
-	{
-		id: 2,
-		name: "person 2",
-		age: 14,
-		salary: 1000
-	}
-]
-
-function removePerson(personList, id, updateList) {
-	const newList = personList
-		.filter(person => {
-			console.log("id = ", person.id)
-			if (person.id !== id) {
-				console.log("match", person)
-				return person
-			}
-		})
-	console.log(newList)
-	updateList(newList)
-	console.log(personList)
-}
-
-function editPerson(personList, id, updateList) {
-	const newList = personList.map((person) => {
-		console.log(person)
-		if (person.id === id) {
-			console.log("inside")
-			person.salary += 1000
-		}
-		return person
-	})
-
-	console.log(newList)
-	updateList(newList)
-}
+import Course from './components/Course';
 
 function App() {
-	const [personListState, setPersonList] = useState(personList)
+	const courses = [
+		{
+			id: 1,
+			name: 'Half Stack application development',
+			parts: [
+				{
+					name: 'Fundamentals of React',
+					exercises: 10,
+					id: 1
+				},
+				{
+					name: 'Using props to pass data',
+					exercises: 7,
+					id: 2
+				},
+				{
+					name: 'State of a component',
+					exercises: 14,
+					id: 3
+				}
+			]
+		},
+		{
+			name: 'Node.js',
+			id: 2,
+			parts: [
+				{
+					name: 'Routing',
+					exercises: 3,
+					id: 1
+				},
+				{
+					name: 'Middlewares',
+					exercises: 7,
+					id: 2
+				}
+			]
+		}
+	]
 
 	return (
 		<>
-			<button
-				onClick={() => editPerson(
-					personList,
-					1,
-					setPersonList
-				)}>
-				add salary
-			</button>
-
-			<ul>
-				{personListState.map(person =>
-					<li key={person.id}>
-						<PersonCard
-							person={person}
-							setPerson={setPersonList}
-							removeHandler={
-								() => removePerson(
-									personListState,
-									person.id,
-									setPersonList,
-								)
-							} />
-					</li>
-				)}
-			</ul>
+			{courses.map(
+				(course) =>
+					<Course
+						key={course.id}
+						course={course}
+					/>)}
 		</>
 	)
 }
