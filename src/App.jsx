@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './App.css'
 import PersonCard from "./PersonCard";
-import Counter from './Counter.jsx';
-import ArrayState from './ArrayState';
+import Counter from './components/Counter.jsx';
+import ArrayState from './components/ArrayState';
 
 class Employee {
 	constructor(name, age, departement) {
