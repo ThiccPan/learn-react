@@ -1,6 +1,5 @@
-const PersonCard = ({person, setPerson}) => {
+const PersonCard = ({person, setPerson, removeHandler}) => {
     console.log(person)
-    const greetingMsg = () => `hello ${person.name}`
     const updateSalary = () => setPerson({
         ...person,
         salary: person.salary + 1000,
@@ -10,7 +9,7 @@ const PersonCard = ({person, setPerson}) => {
             <p>Name: <span>{person.name}</span></p>
             <p>Age: {person.age}</p>
             <p>Salary: {person.salary}</p>
-            <p>{greetingMsg()}</p>
+            <button onClick={removeHandler}>remove person</button>
             
             <button onClick={updateSalary}>+1k to salary</button>
         </div>

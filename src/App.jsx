@@ -18,45 +18,77 @@ class Employee {
 
 let personList = [
 	{
+		id: 1,
 		name: "person 1",
 		age: 12,
 		salary: 1000
 	},
 	{
+		id: 2,
 		name: "person 2",
 		age: 14,
 		salary: 1000
 	}
 ]
 
-const manager = {
-	name: "name",
-	greet: () => ("manager says hello")
+function removePerson(personList, id, updateList) {
+	const newList = personList
+		.filter(person => {
+			console.log("id = ", person.id)
+			if (person.id !== id) {
+				console.log("match", person)
+				return person
+			}
+		})
+	console.log(newList)
+	updateList(newList)
+	console.log(personList)
 }
 
-manager.manageEmployee = (employeeName) => {
-	console.log(employeeName, "is being managed")
+function editPerson(personList, id, updateList) {
+	const newList = personList.map((person) => {
+		console.log(person)
+		if (person.id === id) {
+			console.log("inside")
+			person.salary += 1000
+		}
+		return person
+	})
+
+	console.log(newList)
+	updateList(newList)
 }
 
 function App() {
-	const [displayPerson, setPerson] = useState(personList[0])
-
-	console.log(manager.greet())
-	console.log(manager.manageEmployee("person 1"))
-	const employee1 = new Employee("employee 1", 12, "IT");
-	console.log("employee name: ", employee1.describe())
+	const [personListState, setPersonList] = useState(personList)
 
 	return (
 		<>
-			<h1>Hi there</h1>
-			<PersonCard
-				person={displayPerson}
-				setPerson={setPerson}
-			/>
+			<button
+				onClick={() => editPerson(
+					personList,
+					1,
+					setPersonList
+				)}>
+				add salary
+			</button>
 
-			<Counter/>
-			<br />
-			<ArrayState/>
+			<ul>
+				{personListState.map(person =>
+					<li key={person.id}>
+						<PersonCard
+							person={person}
+							setPerson={setPersonList}
+							removeHandler={
+								() => removePerson(
+									personListState,
+									person.id,
+									setPersonList,
+								)
+							} />
+					</li>
+				)}
+			</ul>
 		</>
 	)
 }
