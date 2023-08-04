@@ -1,56 +1,54 @@
 import { useState } from 'react';
 import './App.css'
-import Counter from './components/Counter.jsx';
-import ArrayState from './components/ArrayState';
-import Note from './components/Note';
-import { personList, addPerson, removePerson, editPerson } from './Person'
+import contact from './contact';
+import ContactInfo from './components/ContactInfo';
+
+let uid = 0
+console.log("init")
 
 function App() {
-	const [personListState, setPersonList] = useState(personList)
-	const [newPerson, setNewPerson] = useState({})
+	const [phonebookList, setPhonebookList] = useState([])
+	const [newContact, setNewContact] = useState(new contact)
+	const [filter, setFilter] = useState('item')
 
-	const handlePersonChange = (event) => {
+	const showedList = phonebookList.filter((contactItem) => contactItem.name.includes(filter))
+
+	function onInputContact(event) {
 		console.log(event.target.value)
-		setNewPerson({
-			name: event.target.value,
-		})
+		setNewContact(
+			new contact(uid, event.target.value, 0)
+		)
+		console.log(newContact)
 	}
 
-	const onAddEvent = () => {
-		setPersonList(
-			addPerson(
-				personListState,
-				newPerson.name
-			)
-		)
+	function onInputFilter(event) {
+		setFilter(event.target.value)
+	}
 
-		console.log(personListState)
+	function addContact() {
+		const addedList = [...phonebookList, newContact]
+		setPhonebookList(addedList);
+		uid++;
+		console.log(addedList)
 	}
 
 	return (
 		<>
-			<span>
-				<input type="text" name="" id="" onChange={handlePersonChange} />
-				<button onClick={onAddEvent}>add person</button>
-			</span>
-			<button
-				onClick={() => editPerson(
-					personList,
-					1,
-					setPersonList
-				)}>
-				add salary
-			</button>
+			<h1>Phonebook</h1>
+			name: <input type="text" onChange={onInputContact} />
+			<br />
+			<button onClick={addContact}>add</button>
 
-			<ul>
-				{personListState.map(person =>
-					<li key={person.id}>
-						{person.name}
-					</li>
-				)}
-			</ul>
-
-			<Note />
+			<h2>Contact</h2>
+			filter: <input type="text" onChange={onInputFilter}/>
+			<br />
+			{showedList.map(
+				(pbContact) => (
+					<ContactInfo
+						key={pbContact.id}
+						contactData={pbContact}
+					/>)
+			)}
 		</>
 	)
 }
