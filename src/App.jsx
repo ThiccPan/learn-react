@@ -9,16 +9,26 @@ console.log("init")
 function App() {
 	const [phonebookList, setPhonebookList] = useState([])
 	const [newContact, setNewContact] = useState(new contact)
-	const [filter, setFilter] = useState('item')
+	const [filter, setFilter] = useState('')
 
 	const showedList = phonebookList.filter((contactItem) => contactItem.name.includes(filter))
 
-	function onInputContact(event) {
-		console.log(event.target.value)
-		setNewContact(
-			new contact(uid, event.target.value, 0)
-		)
-		console.log(newContact)
+	function onInputName(event) {
+		const newContactIn = {
+			...newContact,
+			name: event.target.value
+		}
+		setNewContact(newContactIn)
+		console.log(newContactIn)
+	}
+
+	function onInputNumber(event) {
+		const newContactIn = {
+			...newContact,
+			number: event.target.value
+		}
+		setNewContact(newContactIn)
+		console.log(newContactIn)
 	}
 
 	function onInputFilter(event) {
@@ -26,6 +36,17 @@ function App() {
 	}
 
 	function addContact() {
+		// check if unique or not
+		let isFound = phonebookList
+			.findIndex((pb) =>
+				pb.name == newContact.name
+				|| pb.number == newContact.number)
+				
+		if (isFound > -1) {
+			console.log("not unique")
+			return;
+		}
+
 		const addedList = [...phonebookList, newContact]
 		setPhonebookList(addedList);
 		uid++;
@@ -35,12 +56,16 @@ function App() {
 	return (
 		<>
 			<h1>Phonebook</h1>
-			name: <input type="text" onChange={onInputContact} />
-			<br />
-			<button onClick={addContact}>add</button>
+			<div>
+				name: <input type="text" onChange={onInputName} />
+				<br />
+				number: <input type="number" onChange={onInputNumber} />
+				<br />
+				<button onClick={addContact}>add</button>
+			</div>
 
 			<h2>Contact</h2>
-			filter: <input type="text" onChange={onInputFilter}/>
+			filter: <input type="text" onChange={onInputFilter} />
 			<br />
 			{showedList.map(
 				(pbContact) => (
