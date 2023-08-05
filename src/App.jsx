@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
 import contact from './contact';
 import ContactInfo from './components/ContactInfo';
+import axios from 'axios';
 
 let uid = 0
 console.log("init")
@@ -11,7 +12,16 @@ function App() {
 	const [newContact, setNewContact] = useState(new contact)
 	const [filter, setFilter] = useState('')
 
-	const showedList = phonebookList.filter((contactItem) => contactItem.name.includes(filter))
+	useEffect(() => {
+		console.log('inside callback')
+		axios.get('http://localhost:3000/persons')
+			.then((res) => {
+				console.log(res.data)
+				setPhonebookList(res.data)
+			})
+	}, [])
+
+	const showedList = phonebookList.filter((contactItem) => contactItem.name.toLowerCase().includes(filter))
 
 	function onInputName(event) {
 		const newContactIn = {
@@ -32,7 +42,7 @@ function App() {
 	}
 
 	function onInputFilter(event) {
-		setFilter(event.target.value)
+		setFilter(event.target.value.toLowerCase())
 	}
 
 	function addContact() {
@@ -41,7 +51,7 @@ function App() {
 			.findIndex((pb) =>
 				pb.name == newContact.name
 				|| pb.number == newContact.number)
-				
+
 		if (isFound > -1) {
 			console.log("not unique")
 			return;
