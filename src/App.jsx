@@ -17,8 +17,8 @@ function App() {
 
 	return !notes.length > '' ? 0 : (
 		<>
-			<h1>a</h1>
-			<p>{notes[0].content}</p>
+			<h1>Your Notes</h1>
+			{notes.map((note) => <p key={note.id}>{note.content}</p>)}
 		</>
 	)
 }
