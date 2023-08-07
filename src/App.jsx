@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import contact from './contact';
+import { contact, addContact } from './contact';
 import ContactInfo from './components/ContactInfo';
 import axios from 'axios';
+import backendUrl from './constant';
 
 let uid = 0
 console.log("init")
@@ -14,10 +15,11 @@ function App() {
 
 	useEffect(() => {
 		console.log('inside callback')
-		axios.get('http://localhost:3000/persons')
+		axios.get(backendUrl)
 			.then((res) => {
 				console.log(res.data)
 				setPhonebookList(res.data)
+				uid = res.data.at(-1).id + 1
 			})
 	}, [])
 
@@ -45,22 +47,12 @@ function App() {
 		setFilter(event.target.value.toLowerCase())
 	}
 
-	function addContact() {
-		// check if unique or not
-		let isFound = phonebookList
-			.findIndex((pb) =>
-				pb.name == newContact.name
-				|| pb.number == newContact.number)
+	function onAddHandler() {
+		addContact(phonebookList, setPhonebookList, uid, newContact)
+	}
 
-		if (isFound > -1) {
-			console.log("not unique")
-			return;
-		}
-
-		const addedList = [...phonebookList, newContact]
-		setPhonebookList(addedList);
-		uid++;
-		console.log(addedList)
+	function onDeleteHandler(name) {
+		setPhonebookList(phonebookList.filter((pb) => pb.name != name))
 	}
 
 	return (
@@ -71,7 +63,7 @@ function App() {
 				<br />
 				number: <input type="number" onChange={onInputNumber} />
 				<br />
-				<button onClick={addContact}>add</button>
+				<button onClick={onAddHandler}>add</button>
 			</div>
 
 			<h2>Contact</h2>
@@ -82,6 +74,7 @@ function App() {
 					<ContactInfo
 						key={pbContact.id}
 						contactData={pbContact}
+						onDelete={onDeleteHandler}
 					/>)
 			)}
 		</>

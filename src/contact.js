@@ -1,4 +1,7 @@
-class contact {
+import axios from "axios";
+import backendUrl from "./constant";
+
+export class contact {
     id = 0
     name = '';
     number = '';
@@ -9,4 +12,27 @@ class contact {
     }
 }
 
-export default contact
+export function addContact(phonebookList, setPhonebookList, uid, newContact) {
+    // check if unique or not
+    let isFound = phonebookList
+        .findIndex((pb) =>
+            pb.name == newContact.name
+            || pb.number == newContact.number)
+
+    if (isFound > -1) {
+        console.log("not unique")
+        return;
+    }
+
+    newContact.id = uid
+    uid++;
+
+    axios.post(backendUrl, newContact)
+        .then(res => {
+            console.log(res)
+        })
+
+    const addedList = [...phonebookList, newContact]
+    setPhonebookList(addedList);
+    console.log(addedList)
+}
