@@ -1,45 +1,33 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { contact, addContact, deleteContact } from './contact';
+import contactService from './contact';
 import ContactInfo from './components/ContactInfo';
-import axios from 'axios';
-import backendUrl from './constant';
 
 let uid = 0
 console.log("init")
 
 function App() {
 	const [phonebookList, setPhonebookList] = useState([])
-	const [newContact, setNewContact] = useState(new contact)
-	const [filter, setFilter] = useState('')
-	phonebookList.splice()
+	const [newContact, setNewContact] = useState(new contactService.contact)
+	const [listFilter, setFilter] = useState('')
 
 	useEffect(() => {
 		console.log('inside callback')
-		axios.get(backendUrl)
-			.then((res) => {
-				console.log(res.data)
-				setPhonebookList(res.data)
-				uid = res.data.at(-1).id + 1
-			})
+		contactService.getAll().then(data => {
+			setPhonebookList(data)
+		})
 	}, [])
 
-	const showedList = phonebookList.filter((contactItem) => contactItem.name.toLowerCase().includes(filter))
+	const showedList = phonebookList.filter((contactItem) => contactItem.name.toLowerCase().includes(listFilter))
 
 	function onInputName(event) {
-		const newContactIn = {
-			...newContact,
-			name: event.target.value
-		}
+		const newContactIn = { ...newContact, name: event.target.value }
 		setNewContact(newContactIn)
 		console.log(newContactIn)
 	}
 
 	function onInputNumber(event) {
-		const newContactIn = {
-			...newContact,
-			number: event.target.value
-		}
+		const newContactIn = { ...newContact, number: event.target.value }
 		setNewContact(newContactIn)
 		console.log(newContactIn)
 	}
@@ -49,14 +37,28 @@ function App() {
 	}
 
 	function onAddHandler() {
-		let data = addContact(phonebookList, uid, newContact)
-		if (data !== undefined) {
-			setPhonebookList(data)
+		let isFound = phonebookList
+			.find((pb) => pb.name == newContact.name)
+
+		if (isFound !== undefined) {
+			newContact.id = isFound.id
+			return onEditHandler(newContact);
 		}
+
+		contactService.addContact(uid, newContact)
+			.then(data => {
+				setPhonebookList([...phonebookList, data])
+			})
+	}
+
+	function onEditHandler(newContact) {
+		console.log("not unique")
+		contactService.editContact(newContact)
+		contactService.getAll().then((data) => setPhonebookList(data))
 	}
 
 	function onDeleteHandler(id) {
-		setPhonebookList(deleteContact(phonebookList, id))
+		setPhonebookList(contactService.deleteContact(phonebookList, id))
 	}
 
 	return (

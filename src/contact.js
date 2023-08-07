@@ -12,29 +12,21 @@ export class contact {
     }
 }
 
-export function addContact(phonebookList, uid, newContact) {
-    // check if unique or not
-    let isFound = phonebookList
-        .findIndex((pb) =>
-            pb.name == newContact.name
-            || pb.number == newContact.number)
+export async function getAll() {
+    let res = axios.get(backendUrl).catch(err => console.log(err))
+    const res_1 = await res;
+    return res_1.data;
+}
 
-    if (isFound > -1) {
-        console.log("not unique")
-        editContact(phonebookList, isFound, newContact)
-        return phonebookList;
-    }
-
+export async function addContact(uid, newContact) {
     newContact.id = uid
     uid++;
 
-    axios.post(backendUrl, newContact)
-        .then(res => {
-            console.log(res)
-        })
+    let res = await axios.post(backendUrl, newContact)
         .catch(err => console.log(err))
-
-    return [...phonebookList, newContact]
+        
+    console.log(res.data)
+    return res.data;
 }
 
 export function deleteContact(phonebookList, id) {
@@ -58,13 +50,21 @@ export function deleteContact(phonebookList, id) {
     return updatedList
 }
 
-function editContact(phonebookList, idx, newData) {
-    const editedId = phonebookList[idx].id
-    newData.id = editedId
-    console.log(idx, newData)
-    let data = axios
-        .put(`${backendUrl}/${editedId}`, newData)
-        .then((res) => res.data)
+export async function editContact(editData) {
+    console.log(editData)
+    // return
+    let res = await axios
+        .put(`${backendUrl}/${editData.id}`, editData)
+        .catch(err => console.log(err))
 
-    return data
+    const data = await res.data;
+    return data;
+}
+
+export default {
+    contact,
+    getAll,
+    addContact,
+    deleteContact,
+    editContact
 }
