@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { contact, addContact } from './contact';
+import { contact, addContact, deleteContact } from './contact';
 import ContactInfo from './components/ContactInfo';
 import axios from 'axios';
 import backendUrl from './constant';
@@ -12,6 +12,7 @@ function App() {
 	const [phonebookList, setPhonebookList] = useState([])
 	const [newContact, setNewContact] = useState(new contact)
 	const [filter, setFilter] = useState('')
+	phonebookList.splice()
 
 	useEffect(() => {
 		console.log('inside callback')
@@ -48,11 +49,14 @@ function App() {
 	}
 
 	function onAddHandler() {
-		addContact(phonebookList, setPhonebookList, uid, newContact)
+		let data = addContact(phonebookList, uid, newContact)
+		if (data !== undefined) {
+			setPhonebookList(data)
+		}
 	}
 
-	function onDeleteHandler(name) {
-		setPhonebookList(phonebookList.filter((pb) => pb.name != name))
+	function onDeleteHandler(id) {
+		setPhonebookList(deleteContact(phonebookList, id))
 	}
 
 	return (
