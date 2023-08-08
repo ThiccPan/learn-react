@@ -13,9 +13,7 @@ function App() {
 
 	useEffect(() => {
 		console.log('inside callback')
-		contactService.getAll().then(data => {
-			setPhonebookList(data)
-		})
+		contactService.getAll().then(data => setPhonebookList(data))
 	}, [])
 
 	const showedList = phonebookList.filter((contactItem) => contactItem.name.toLowerCase().includes(listFilter))
@@ -37,24 +35,28 @@ function App() {
 	}
 
 	function onAddHandler() {
-		let isFound = phonebookList
-			.find((pb) => pb.name == newContact.name)
+		let isFound = phonebookList.find((pb) => pb.name == newContact.name);
 
 		if (isFound !== undefined) {
-			newContact.id = isFound.id
-			return onEditHandler(newContact);
+			if (window.confirm(`contact with the name ${isFound.name} detected, edit number?`)) {
+			newContact.id = isFound.id;
+			onEditHandler(newContact);
+			return
+			}
 		}
 
 		contactService.addContact(uid, newContact)
-			.then(data => {
-				setPhonebookList([...phonebookList, data])
-			})
+			.then(data => setPhonebookList([...phonebookList, data]))
 	}
 
 	function onEditHandler(newContact) {
 		console.log("not unique")
 		contactService.editContact(newContact)
-		contactService.getAll().then((data) => setPhonebookList(data))
+			.then(
+				contactService
+					.getAll()
+					.then((data) => setPhonebookList(data))
+			)
 	}
 
 	function onDeleteHandler(id) {
