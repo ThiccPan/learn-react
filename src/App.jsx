@@ -5,6 +5,14 @@ import ContactInfo from './components/ContactInfo';
 
 let uid = 0
 console.log("init")
+let mounted = false
+
+function initRender(setPhonebookList) {
+	if (!mounted) {
+		contactService.getAll().then(data => setPhonebookList(data))
+	}
+	mounted = true
+}
 
 function App() {
 	const [phonebookList, setPhonebookList] = useState([])
@@ -12,9 +20,9 @@ function App() {
 	const [listFilter, setFilter] = useState('')
 
 	useEffect(() => {
-		console.log('inside callback')
-		contactService.getAll().then(data => setPhonebookList(data))
-	}, [])
+		console.log(mounted)
+		initRender(setPhonebookList)
+	}, [phonebookList])
 
 	const showedList = phonebookList.filter((contactItem) => contactItem.name.toLowerCase().includes(listFilter))
 
@@ -39,9 +47,9 @@ function App() {
 
 		if (isFound !== undefined) {
 			if (window.confirm(`contact with the name ${isFound.name} detected, edit number?`)) {
-			newContact.id = isFound.id;
-			onEditHandler(newContact);
-			return
+				newContact.id = isFound.id;
+				onEditHandler(newContact);
+				return
 			}
 		}
 
