@@ -18,11 +18,19 @@ function App() {
 	const [phonebookList, setPhonebookList] = useState([])
 	const [newContact, setNewContact] = useState(new contactService.contact)
 	const [listFilter, setFilter] = useState('')
+	const [notification, setNotification] = useState('')
+	const [notifDuration, setNotifDuration] = useState(0)
 
 	useEffect(() => {
 		console.log(mounted)
 		initRender(setPhonebookList)
-	}, [phonebookList])
+		if (notifDuration > 0) {
+			setTimeout(() => {
+				setNotifDuration(0)
+				setNotification('')
+			}, notifDuration)
+		}
+	}, [phonebookList, notifDuration])
 
 	const showedList = phonebookList.filter((contactItem) => contactItem.name.toLowerCase().includes(listFilter))
 
@@ -55,6 +63,10 @@ function App() {
 
 		contactService.addContact(uid, newContact)
 			.then(data => setPhonebookList([...phonebookList, data]))
+
+		setNotification("added new")
+		setNotifDuration(notifDuration + 3000)
+		console.log(notifDuration)
 	}
 
 	function onEditHandler(newContact) {
@@ -65,6 +77,8 @@ function App() {
 					.getAll()
 					.then((data) => setPhonebookList(data))
 			)
+
+		setNotification(`${newContact.name} edited`)		
 	}
 
 	function onDeleteHandler(id) {
@@ -74,6 +88,7 @@ function App() {
 	return (
 		<>
 			<h1>Phonebook</h1>
+			<p>{notification}</p>
 			<div>
 				name: <input type="text" onChange={onInputName} />
 				<br />
