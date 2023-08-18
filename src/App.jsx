@@ -10,8 +10,8 @@ let mounted = false
 function initRender(setPhonebookList) {
 	if (!mounted) {
 		contactService.getAll().then(data => setPhonebookList(data))
+		mounted = true
 	}
-	mounted = true
 }
 
 function App() {
