@@ -80,6 +80,25 @@ app.put('/notes/:id', (req, res) => {
     res.send(data.notes[resIdx])
 })
 
+app.delete('/notes/:id', (req, res) => {
+    const id = Number(req.params.id)
+
+    let isFound = false
+    let updated = data.notes.flatMap((note) => {
+        if (note.id !== id) {
+            return note
+        }
+        isFound = true
+        return []
+    })
+
+    fs.writeFileSync("db.json", JSON.stringify(updated))
+    res.json({
+        "is_found": isFound,
+        "updated": updated
+    })
+})
+
 app.listen(PORT, () => {
     console.log(`app started at ${PORT}`)
 })
