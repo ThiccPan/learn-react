@@ -44,7 +44,7 @@ app.post('/notes', (req, res) => {
 
 app.get('/notes/:id', (req, res) => {
     const id = Number(req.params.id)
-    const resData = data.find((note) => note.id === id)
+    const resData = data.notes.find((note) => note.id === id)
 
     if (resData === undefined) {
         res.status(404).send()
